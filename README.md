@@ -1,4 +1,4 @@
-# dotfiles-ai
+# personal-ai-harness
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -65,8 +65,8 @@ scripts/                                  # repo tooling (not installed)
 ## Install (first time on a machine)
 
 ```bash
-git clone <this-repo> ~/dotfiles-ai
-cd ~/dotfiles-ai
+git clone <this-repo> ~/personal-ai-harness
+cd ~/personal-ai-harness
 ./install.sh
 ```
 
@@ -75,7 +75,7 @@ What `install.sh` does:
 2. Symlinks each hook script from `home/.claude/scripts/` into `~/.claude/scripts/` (makes them executable).
 3. Merges `home/.claude/settings.hooks.json`'s `hooks` block into `~/.claude/settings.json`, preserving all other keys (env, model, permissions). Backs up the original to `settings.json.backup.<timestamp>` next to it.
 
-Conflict backups land in `~/.dotfiles-ai.backup.<timestamp>/`.
+Conflict backups land in `~/.personal-ai-harness.backup.<timestamp>/`.
 
 What `install.sh` does NOT do:
 - Touch `~/.claude/rules/`. Boundaries are project-scoped (see "Add boundary protection to a project" below) — installing a global rule would mistakenly constrain edits across your home dir.
@@ -88,7 +88,7 @@ Just `git pull`. Because everything is symlinked, edits in the repo are live.
 
 ## Edit a skill or hook
 
-Edit the file inside `~/dotfiles-ai/` (or follow the symlink — same thing). Commit and push when satisfied.
+Edit the file inside `~/personal-ai-harness/` (or follow the symlink — same thing). Commit and push when satisfied.
 
 ## Add boundary protection to a project
 
@@ -105,7 +105,7 @@ To add a project-wide boundary, copy the bundled example:
 
 ```bash
 mkdir -p <your-project>/.claude/rules
-cp ~/dotfiles-ai/examples/code-boundary.md <your-project>/.claude/rules/code-boundary.md
+cp ~/personal-ai-harness/examples/code-boundary.md <your-project>/.claude/rules/code-boundary.md
 # edit the paths to match the project
 ```
 
@@ -128,8 +128,8 @@ Removes symlinks and (optionally, with `--restore`) puts backups back.
 git push
 
 # on machine B
-git clone <this-repo> ~/dotfiles-ai
-cd ~/dotfiles-ai
+git clone <this-repo> ~/personal-ai-harness
+cd ~/personal-ai-harness
 ./install.sh
 ```
 

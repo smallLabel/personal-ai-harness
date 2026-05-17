@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # uninstall.sh — remove symlinks created by install.sh
-# Does NOT delete the dotfiles-ai repo itself.
+# Does NOT delete the personal-ai-harness repo itself.
 # Does NOT remove items that aren't symlinks pointing to this repo.
 
 set -euo pipefail
@@ -22,7 +22,7 @@ unlink_if_ours() {
   echo "  • skip (not ours or missing): $dst"
 }
 
-echo "Uninstalling dotfiles-ai symlinks. Repo at $DOTFILES is left intact."
+echo "Uninstalling personal-ai-harness symlinks. Repo at $DOTFILES is left intact."
 echo
 
 echo "▶ Skills"
@@ -50,5 +50,5 @@ echo
 
 echo "✓ Done."
 echo
-echo "Note: any backups in ~/.dotfiles-ai.backup.* are NOT auto-restored."
-echo "      Restore manually if needed:  mv ~/.dotfiles-ai.backup.<ts>/<name> <original-location>"
+echo "Note: any backups in ~/.personal-ai-harness.backup.* are NOT auto-restored."
+echo "      Restore manually if needed:  mv ~/.personal-ai-harness.backup.<ts>/<name> <original-location>"

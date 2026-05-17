@@ -1,4 +1,4 @@
-# dotfiles-ai
+# personal-ai-harness
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
@@ -61,8 +61,8 @@ scripts/                                  # 仓库自用工具（不安装到系
 ## 首次在一台新机器上安装
 
 ```bash
-git clone <仓库地址> ~/dotfiles-ai
-cd ~/dotfiles-ai
+git clone <仓库地址> ~/personal-ai-harness
+cd ~/personal-ai-harness
 ./install.sh
 ```
 
@@ -71,7 +71,7 @@ cd ~/dotfiles-ai
 2. 把 `home/.claude/scripts/` 下的每个 hook 脚本符号链接到 `~/.claude/scripts/`（并赋可执行权限）。
 3. 把 `home/.claude/settings.hooks.json` 里的 `hooks` 块合并进 `~/.claude/settings.json`，保留其余所有键（env、model、permissions）。原文件备份到旁边的 `settings.json.backup.<时间戳>`。
 
-冲突备份落在 `~/.dotfiles-ai.backup.<时间戳>/`。
+冲突备份落在 `~/.personal-ai-harness.backup.<时间戳>/`。
 
 `install.sh` **不做**的事：
 - 不动 `~/.claude/rules/`。Boundaries 是项目级的（见下文"为项目添加边界保护"）——如果在全局放规则，会错误地约束整个家目录的编辑。
@@ -84,7 +84,7 @@ cd ~/dotfiles-ai
 
 ## 编辑 skill 或 hook
 
-直接编辑 `~/dotfiles-ai/` 里的文件（或顺着符号链接编辑——同一个文件）。满意了就 commit + push。
+直接编辑 `~/personal-ai-harness/` 里的文件（或顺着符号链接编辑——同一个文件）。满意了就 commit + push。
 
 ## 为项目添加边界保护
 
@@ -97,7 +97,7 @@ cd ~/dotfiles-ai
 
 ```bash
 mkdir -p <你的项目>/.claude/rules
-cp ~/dotfiles-ai/examples/code-boundary.md <你的项目>/.claude/rules/code-boundary.md
+cp ~/personal-ai-harness/examples/code-boundary.md <你的项目>/.claude/rules/code-boundary.md
 # 根据项目实际结构改 Owned / Out-of-bounds 路径
 ```
 
@@ -109,7 +109,7 @@ cp ~/dotfiles-ai/examples/code-boundary.md <你的项目>/.claude/rules/code-bou
 ./uninstall.sh
 ```
 
-移除符号链接，并从 `settings.json` 摘掉 hooks 块（其他键保留）。`.dotfiles-ai.backup.*` 备份不会自动还原，需要手动 `mv` 回原位。
+移除符号链接，并从 `settings.json` 摘掉 hooks 块（其他键保留）。`.personal-ai-harness.backup.*` 备份不会自动还原，需要手动 `mv` 回原位。
 
 ## 同步到另一台机器
 
@@ -118,8 +118,8 @@ cp ~/dotfiles-ai/examples/code-boundary.md <你的项目>/.claude/rules/code-bou
 git push
 
 # 机器 B
-git clone <仓库地址> ~/dotfiles-ai
-cd ~/dotfiles-ai
+git clone <仓库地址> ~/personal-ai-harness
+cd ~/personal-ai-harness
 ./install.sh
 ```
 

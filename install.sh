@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# install.sh — symlink dotfiles-ai content into ~
+# install.sh — symlink personal-ai-harness content into ~
 # Idempotent: re-run safely, existing correct symlinks are left alone.
-# Conflicting files are moved to ~/.dotfiles-ai.backup.<timestamp>/
+# Conflicting files are moved to ~/.personal-ai-harness.backup.<timestamp>/
 
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOME_DIR="${HOME}"
-BACKUP_DIR="${HOME_DIR}/.dotfiles-ai.backup.$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="${HOME_DIR}/.personal-ai-harness.backup.$(date +%Y%m%d_%H%M%S)"
 BACKUP_USED=0
 
 link() {
@@ -34,7 +34,7 @@ link() {
   echo "  ✓ linked:    $dst"
 }
 
-echo "Installing dotfiles-ai from: $DOTFILES"
+echo "Installing personal-ai-harness from: $DOTFILES"
 echo
 
 echo "▶ Skills (~/.agents/skills/)"
