@@ -1,5 +1,57 @@
-*.backup.*
-*.bak
+# OS / editor noise
 .DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
 __pycache__/
 *.pyc
+
+# Backups (created by install.sh / merge-settings.py)
+*.backup.*
+*.bak
+
+# --- Defense in depth: never commit these by accident ---
+# Even though we keep secrets in ~/.claude/settings.json (NOT in this repo),
+# block the patterns most likely to contain them, in case anyone ever copies
+# a real config file into the repo.
+
+# Real Claude Code settings (contain API tokens, base URLs, proxies)
+settings.json
+settings.local.json
+.claude.json
+.skill-lock.json
+
+# Environment / secret files
+.env
+.env.*
+*.env
+secrets.*
+*.secret
+*.secrets
+
+# Keys / credentials
+*.key
+*.pem
+*.p12
+*.pfx
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+id_*
+known_hosts
+authorized_keys
+
+# Cloud / service credentials
+.aws/
+.gcp/
+.azure/
+.kube/config
+.npmrc
+.pypirc
+
+# Anything explicitly marked private
+*.private
+*-private/
+private/

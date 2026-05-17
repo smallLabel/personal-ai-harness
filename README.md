@@ -3,6 +3,32 @@
 Personal AI-harness configuration (Claude Code + agent skills + enforcement hooks).
 Single source of truth, syncable across machines via git.
 
+> **Sharing this publicly?** This repo captures a single developer's workflow for
+> driving Claude Code with skills that **classify input → write requirement specs →
+> enforce code-edit boundaries via hooks**. It's not a polished product — it's a
+> working personal harness. Fork it, copy parts, or use it as a reference for
+> building your own.
+
+## Why this exists
+
+LLMs inside agentic tools are *not* reliable on their own — they need scaffolding
+that:
+1. **Routes** the right behavior for the right input (skill activation rules).
+2. **Constrains** what edits AI can make (Code Boundary hooks block out-of-scope writes).
+3. **Externalizes state** to files instead of relying on the chat context.
+4. **Reproduces** across machines (this repo + `./install.sh`).
+
+This is the harness paradigm: trust the framework, not the model. The repo
+contains one personal take on it, focused on Claude Code.
+
+## Prerequisites
+
+- macOS or Linux (paths assume Unix-style `~/`; Windows not tested)
+- `git` and `python3` (3.10+, for the merger + hooks)
+- [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) installed
+- Optional: an `~/.agents/skills/` directory if you use the Anthropic agent SDK
+  layout. If you don't have it, `install.sh` creates it.
+
 ## What's managed
 
 ```
