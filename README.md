@@ -1,5 +1,7 @@
 # dotfiles-ai
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 Personal AI-harness configuration (Claude Code + agent skills + enforcement hooks).
 Single source of truth, syncable across machines via git.
 
