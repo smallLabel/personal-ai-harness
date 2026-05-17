@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Boundary Enforcer"
+  short_description: "强制将 AI 的代码编辑限制在声明的 Code Boundary 内，防止误改共享代码或其他模块"
+  default_prompt: "Use $code-boundary-enforcer for this code change — list files first, route shared edits through the Shared Code Change Protocol, and run git diff audit before declaring done."
