@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
+**English** · [中文](./README.zh.md)
+
 Personal AI-harness configuration (Claude Code + agent skills + enforcement hooks).
 Single source of truth, syncable across machines via git.
 
@@ -137,7 +139,7 @@ Each machine keeps its own `~/.claude/settings.json` (with its own API tokens, e
 
 - New skills: drop the directory into `home/.agents/skills/<name>/`, re-run `./install.sh`.
 - New hooks: add script to `home/.claude/scripts/`, register in `home/.claude/settings.hooks.json`, re-run `./install.sh`.
-- New rule files: add to `home/.claude/rules/`, re-run `./install.sh`.
+- New example rule files: add to `examples/` (manual copy into projects — not symlinked).
 
 ## Why symlinks instead of copies
 
