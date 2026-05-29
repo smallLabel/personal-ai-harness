@@ -104,15 +104,20 @@ Once found, it reads `## Code Boundary` from one of these (first hit wins):
 
 1. `<project>/.ai/modules/<most-recently-modified>.md` — written by the
    `personal-requirements-workflow` skill.
-2. `<project>/.claude/rules/code-boundary.md` — project-wide default, useful for
-   bug-fix / refactor work.
+2. `<project>/.claude/rules/code-boundary.md` — legacy location; auto-loaded
+   into every Claude Code session as project instructions.
+3. `<project>/.ai/rules/code-boundary.md` — preferred location; **not** auto-loaded
+   (AI Reads on-demand), so it doesn't bloat session context. See `install-rules.sh`.
 
 To add a project-wide boundary, copy the bundled example:
 
 ```bash
+# Simple (single-file example):
 mkdir -p <your-project>/.claude/rules
 cp ~/personal-ai-harness/examples/code-boundary.md <your-project>/.claude/rules/code-boundary.md
 # edit the paths to match the project
+
+# Preferred: install the full rules template (see below)
 ```
 
 Without any boundary file (or outside any project), the hook is a silent no-op
