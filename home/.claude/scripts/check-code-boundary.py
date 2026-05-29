@@ -241,9 +241,13 @@ def main() -> None:
         emit("allow")  # no declaration → no enforcement
 
     try:
-        buckets = parse_boundary(boundary_path.read_text())
+        # Explicit UTF-8: Windows defaults to system codepage (e.g. GBK on zh-CN)
+        # which fails on UTF-8 boundary files with non-ASCII content.
+        buckets = parse_boundary(boundary_path.read_text(encoding="utf-8"))
     except OSError as e:
         fail_open(f"cannot read {boundary_path}: {e}")
+    except UnicodeDecodeError as e:
+        fail_open(f"cannot decode {boundary_path} as UTF-8: {e}")
 
     if not (buckets["owned"] or buckets["read_only"] or buckets["out_of_bounds"]):
         emit("allow")  # Code Boundary section is empty / malformed
