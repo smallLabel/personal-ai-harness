@@ -24,7 +24,7 @@ agentic 工具里的 LLM **靠自己不可靠**，需要外层脚手架做到：
 
 ## 前置要求
 
-- macOS 或 Linux（路径用 Unix 风格的 `~/`；Windows 未测试）
+- macOS / Linux / Windows（Windows 需要 Git Bash + Python 3，路径仍用 Unix 风格 `~/`；hook 已修复 Windows 编码与路径分隔符问题）
 - `git` 和 `python3`（3.10+，merger 和 hooks 需要）
 - 已安装 [Claude Code](https://docs.claude.com/en/docs/claude-code/overview)
 - 可选：如果你使用 Anthropic agent SDK 的 `~/.agents/skills/` 目录布局。如果没有，`install.sh` 会自动创建。
@@ -138,6 +138,54 @@ cp ~/personal-ai-harness/examples/code-boundary.md <你的项目>/.claude/rules/
 1. `CLAUDE.md` / `AGENTS.md` 的「项目专属」区块（技术栈、命令、目录结构等）。
 2. `.ai/rules/code-boundary.md` 的具体路径 glob。
 3. （可选）`.ai/rules/coding-style.md` 的 Prettier / ESLint 数值。
+
+### 让 AI 自动装 + 自动补全（推荐）
+
+把下面这段粘给 Claude Code / Codex 等 AI 助手，它会自动跑安装脚本、读项目实际结构、补全项目专属内容：
+
+```
+请帮我把 personal-ai-harness 的 AI 规则装进当前项目，分 3 步:
+
+1. 跑安装脚本: bash ~/personal-ai-harness/install-rules.sh .
+
+2. 安装会在项目根放下 CLAUDE.md / AGENTS.md，以及 .ai/rules/ 下 6 个规则
+   文件。请读项目实际状态来补全:
+
+   a. 看 package.json + 项目根 + src/ 结构，把 CLAUDE.md 顶部「项目专属」
+      占位段替换为实际内容（技术栈、常用命令、目录结构、路径别名等）。
+
+   b. 把 AGENTS.md 简化为一句指向 CLAUDE.md 的指针（保持单一来源），或者
+      把 CLAUDE.md 的项目专属段镜像过去（两选一）。
+
+   c. 改写 .ai/rules/code-boundary.md 的三档路径 glob，按本项目目录:
+      - Owned:        业务页面、按领域分组的 api/store/i18n、文档、AI 工作区
+      - Read-only:    共享组件、hooks、utils、布局、全局样式/配置/类型/路由、入口
+      - Out-of-bounds: package.json/锁文件、构建配置（vite/webpack/tsconfig）、
+                       .env*、CI、scripts、dist、node_modules
+
+   d. 看项目 .prettierrc / .eslintrc, 若与模板默认不同, 调整
+      .ai/rules/coding-style.md 的数值（printWidth/引号/缩进）。若是
+      React/Svelte/纯 Node 项目, 把 Vue 专有条款删掉, 换成对应技术栈基线。
+
+3. 完成后报告:
+   - 哪些文件被新建/修改
+   - CLAUDE.md 项目专属段和 boundary 三档的关键改动各一句话摘要
+   - 有没有归类不明确的边缘文件需要我决策
+
+约束:
+- 不主动跑 npm install / build / lint（遵守 .ai/rules/verification.md）
+- 完成前不 git commit
+- 涉及不确定的归类先列出来问我, 别凭猜测填
+```
+
+按项目类型微调（粘 prompt 时一起说）：
+
+| 项目类型 | 加一句 |
+|---|---|
+| Vue + Element/Antd | 无需改，模板默认即可 |
+| React + Next/Remix | 第 2.d 步把 Vue 条款换成 React Composition API + Hooks 规则 |
+| Node 后端 / 纯 lib | 第 2.d 步删 UI 相关规则（component-reuse / ui-style），保留 boundary / verification / coding-style |
+| Monorepo | 第 2.c 步 boundary 按 workspace 分，每个 package 单独列 Owned |
 
 ## 卸载
 

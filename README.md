@@ -27,7 +27,7 @@ contains one personal take on it, focused on Claude Code.
 
 ## Prerequisites
 
-- macOS or Linux (paths assume Unix-style `~/`; Windows not tested)
+- macOS / Linux / Windows (Windows needs Git Bash + Python 3; paths still use Unix-style `~/`. Hook handles Windows-specific encoding and path-separator quirks.)
 - `git` and `python3` (3.10+, for the merger + hooks)
 - [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) installed
 - Optional: an `~/.agents/skills/` directory if you use the Anthropic agent SDK
@@ -154,6 +154,60 @@ After installing, you need to fill in:
 1. The "project-specific" section in `CLAUDE.md` / `AGENTS.md` (stack, commands, layout).
 2. The actual path globs in `.ai/rules/code-boundary.md`.
 3. (Optional) Prettier / ESLint values in `.ai/rules/coding-style.md`.
+
+### Let AI install + auto-configure (recommended)
+
+Paste the prompt below to Claude Code / Codex inside a fresh project session. It will run the installer, read the project's actual structure, and fill in the project-specific bits for you:
+
+```
+Help me install personal-ai-harness AI rules into this project. 3 steps:
+
+1. Run the installer: bash ~/personal-ai-harness/install-rules.sh .
+
+2. The installer drops CLAUDE.md / AGENTS.md at the project root plus 6
+   rule files under .ai/rules/. Read the actual project state and fill
+   them in:
+
+   a. Look at package.json, project root layout, and src/ structure. Replace
+      the 'project-specific' placeholder section in CLAUDE.md with real
+      content (stack, common commands, directory layout, path aliases).
+
+   b. Simplify AGENTS.md to a one-line pointer at CLAUDE.md (single source
+      of truth), or mirror the project-specific section across. Pick one.
+
+   c. Rewrite the three path-glob buckets in .ai/rules/code-boundary.md to
+      match this project's actual directories:
+      - Owned:        view pages, domain-grouped api/store/i18n, docs, AI workspace
+      - Read-only:    shared components, hooks, utils, layouts, global styles/
+                      config/types/routes, entry files
+      - Out-of-bounds: package.json/lockfiles, build configs (vite/webpack/
+                      tsconfig), .env*, CI, scripts, dist, node_modules
+
+   d. Look at .prettierrc / .eslintrc. If they differ from the template
+      defaults, adjust numbers in .ai/rules/coding-style.md (printWidth,
+      quotes, indent). If this is a React/Svelte/pure Node project, strip
+      Vue-specific clauses and substitute the right stack's baseline.
+
+3. When done, report:
+   - Which files were created/modified
+   - One-sentence summary of CLAUDE.md's project-specific section AND of
+     each boundary bucket
+   - Any edge files you can't confidently classify
+
+Constraints:
+- Don't proactively run npm install / build / lint (per .ai/rules/verification.md)
+- Don't git commit before you're done
+- For unclear classifications, list them and ask me — don't guess
+```
+
+Adjust for project type (add to the prompt):
+
+| Project type | Add |
+|---|---|
+| Vue + Element/Antd | Nothing — defaults match |
+| React + Next/Remix | In step 2.d, swap Vue clauses for React (Composition API → Hooks/Effects) |
+| Node backend / pure lib | In step 2.d, drop UI-specific rules (component-reuse / ui-style), keep boundary / verification / coding-style |
+| Monorepo | In step 2.c, scope the boundary per workspace — list each package's Owned separately |
 
 ## Uninstall
 
