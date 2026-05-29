@@ -97,14 +97,18 @@ cd ~/personal-ai-harness
 `check-code-boundary.py` hook 从当前工作目录向上找项目根（含 `.ai/` 或 `.claude/` 的目录，但遇到 `$HOME` 就停）。找到后，按顺序读取 `## Code Boundary`（先命中先用）：
 
 1. `<project>/.ai/modules/<最新修改的>.md`——由 `personal-requirements-workflow` skill 写入。
-2. `<project>/.claude/rules/code-boundary.md`——项目级默认，适合 bug 修复 / 重构这类工作。
+2. `<project>/.claude/rules/code-boundary.md`——legacy 位置，会被 Claude Code 自动加载到 session context。
+3. `<project>/.ai/rules/code-boundary.md`——推荐位置，**不会**自动加载，需要时 AI 主动 Read（省 token，详见下文 `install-rules.sh`）。
 
 要给项目加一个项目级 boundary，拷贝示例：
 
 ```bash
+# 简单方式（单文件示例）：
 mkdir -p <你的项目>/.claude/rules
 cp ~/personal-ai-harness/examples/code-boundary.md <你的项目>/.claude/rules/code-boundary.md
 # 根据项目实际结构改 Owned / Out-of-bounds 路径
+
+# 推荐方式：跑 install-rules.sh 一次装齐 6 个规则（见下文）
 ```
 
 如果找不到任何 boundary 文件（或者当前不在任何项目里），hook 静默放行（allow）。Skill 会在编辑前提醒你声明 boundary。

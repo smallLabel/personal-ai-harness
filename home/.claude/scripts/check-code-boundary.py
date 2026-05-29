@@ -7,8 +7,14 @@ outside the Owned glob patterns.
 
 Boundary discovery order (first hit wins):
   1. <project>/.ai/modules/<most-recently-modified>.md  →  ## Code Boundary
-  2. <project>/.claude/rules/code-boundary.md          →  ## Code Boundary
-  3. None found → allow silently (the skill prompts user to declare one)
+  2. <project>/.claude/rules/code-boundary.md          →  ## Code Boundary  (legacy)
+  3. <project>/.ai/rules/code-boundary.md              →  ## Code Boundary  (preferred)
+  4. None found → allow silently (the skill prompts user to declare one)
+
+Note on (2) vs (3): `.claude/rules/*.md` is auto-loaded into every Claude Code
+session as project instructions. Projects that want to save tokens move rules
+under `.ai/rules/` (which is NOT auto-loaded) and rely on AI to Read on-demand.
+This hook checks both so a project can migrate at its own pace.
 
 Where <project> = the nearest ancestor of CWD that contains .ai/ or .claude/.
 
@@ -114,8 +120,19 @@ def find_active_spec(project_root: Path) -> Path | None:
 
 
 def find_project_rule(project_root: Path) -> Path | None:
-    rule = project_root / ".claude" / "rules" / "code-boundary.md"
-    return rule if rule.is_file() else None
+    """Look for a project-wide boundary file.
+
+    Checks .claude/rules/ first (legacy / auto-loaded location), then
+    .ai/rules/ (preferred / on-demand location). First hit wins so a
+    project mid-migration with both files still gets deterministic behavior.
+    """
+    for candidate in (
+        project_root / ".claude" / "rules" / "code-boundary.md",
+        project_root / ".ai" / "rules" / "code-boundary.md",
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
 
 
 def parse_boundary(md_text: str) -> dict[str, list[str]]:
