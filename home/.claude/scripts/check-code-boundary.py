@@ -189,9 +189,14 @@ def parse_boundary(md_text: str) -> dict[str, list[str]]:
 
 
 def relpath(file_abs: Path, root: Path) -> str | None:
-    """Return file_abs relative to root, or None if outside root."""
+    """Return file_abs relative to root with forward-slash separators, or None.
+
+    Uses POSIX-style separators so glob patterns (which always use '/') match
+    on Windows too — str(Path(...)) returns backslash-separated paths on
+    Windows, which would never match a 'src/foo/**' glob.
+    """
     try:
-        return str(file_abs.resolve().relative_to(root.resolve()))
+        return file_abs.resolve().relative_to(root.resolve()).as_posix()
     except ValueError:
         return None
 
