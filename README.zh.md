@@ -44,7 +44,13 @@ home/                                     # install.sh 把这里的内容符号�
         └── code-boundary-enforcer/
 
 examples/                                 # 不被符号链接——按需手动拷进项目
-└── code-boundary.md                      # 项目级 boundary 模板
+└── code-boundary.md                      # 单文件 boundary 示例（被 templates/ 取代，保留作参考）
+
+templates/                                # 项目级模板（不被符号链接——通过 install-rules.sh 安装）
+└── ai-rules/                             # 跨 AI 工具（Claude Code / Codex）通用规则集
+    ├── CLAUDE.md                         # 项目入口（Claude Code 自动读）
+    ├── AGENTS.md                         # 项目入口（Codex 自动读）
+    └── rules/                            # 6 个规则文件，装到 <project>/.ai/rules/
 
 scripts/                                  # 仓库自用工具（不安装到系统）
 └── merge-settings.py                     # 被 install.sh 调用，合并 hooks
@@ -103,6 +109,32 @@ cp ~/personal-ai-harness/examples/code-boundary.md <你的项目>/.claude/rules/
 
 如果找不到任何 boundary 文件（或者当前不在任何项目里），hook 静默放行（allow）。Skill 会在编辑前提醒你声明 boundary。
 
+## 为项目安装通用 AI 规则
+
+除了单文件 boundary 之外，本仓库还提供一套**跨 AI 工具（Claude Code + Codex）的项目级规则模板**（位于 `templates/ai-rules/`），覆盖：
+
+- 验证与检查（不主动跑 check / lint / build）
+- AI 能力调用时机
+- 编码风格（Vue / TS 基线）
+- 组件复用（先搜后用）
+- 完整代码边界声明（含 Shared Code Change Protocol）
+- UI 风格（原型图处理）
+- `CLAUDE.md` / `AGENTS.md` 入口（两套 AI 工具都识别）
+
+一键装到目标项目：
+
+```bash
+~/personal-ai-harness/install-rules.sh /path/to/your-project
+# 或在项目目录里直接 ~/personal-ai-harness/install-rules.sh
+```
+
+**为什么不放进 `.claude/rules/`？** 规则文件装到 `<project>/.ai/rules/`，因此 **不会被 Claude Code 自动加载到 session context**——只有 AI 判断需要时才 Read，单次会话能省 ~2000 token。`CLAUDE.md` 和 `AGENTS.md` 只在不存在时才创建（避免覆盖项目已有入口）。
+
+装完后需要手动改：
+1. `CLAUDE.md` / `AGENTS.md` 的「项目专属」区块（技术栈、命令、目录结构等）。
+2. `.ai/rules/code-boundary.md` 的具体路径 glob。
+3. （可选）`.ai/rules/coding-style.md` 的 Prettier / ESLint 数值。
+
 ## 卸载
 
 ```bash
@@ -130,6 +162,7 @@ cd ~/personal-ai-harness
 - 新增 skill：把目录放到 `home/.agents/skills/<name>/`，重跑 `./install.sh`。
 - 新增 hook：脚本放 `home/.claude/scripts/`，在 `home/.claude/settings.hooks.json` 里注册，重跑 `./install.sh`。
 - 新增示例规则文件：放 `examples/`（手动拷进项目使用——不会被符号链接）。
+- 修改 / 新增通用规则模板：改 `templates/ai-rules/rules/`，所有用过 `install-rules.sh` 的项目可以重跑脚本拉最新（重跑只覆盖规则文件，不动 `CLAUDE.md` / `AGENTS.md`）。
 
 ## 为什么用符号链接而不是拷贝
 

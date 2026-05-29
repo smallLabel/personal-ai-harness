@@ -48,7 +48,13 @@ home/                                     # symlinked into ~ by install.sh
         └── code-boundary-enforcer/
 
 examples/                                 # NOT symlinked — copy into your projects manually
-└── code-boundary.md                      # project-level boundary template
+└── code-boundary.md                      # single-file boundary example (superseded by templates/, kept for reference)
+
+templates/                                # project-level templates (NOT symlinked — installed via install-rules.sh)
+└── ai-rules/                             # cross-tool (Claude Code / Codex) AI rules
+    ├── CLAUDE.md                         # project entry (Claude Code auto-loads)
+    ├── AGENTS.md                         # project entry (Codex auto-loads)
+    └── rules/                            # 6 rule files installed into <project>/.ai/rules/
 
 scripts/                                  # repo tooling (not installed)
 └── merge-settings.py                     # used by install.sh to merge hooks
@@ -113,6 +119,37 @@ Without any boundary file (or outside any project), the hook is a silent no-op
 (allows). The skill prompts you to declare a boundary before editing if one is
 expected but missing.
 
+## Install project-wide AI rules
+
+Beyond the single-file boundary, this repo ships a **cross-tool (Claude Code +
+Codex) project-level rules template** at `templates/ai-rules/`, covering:
+
+- Verification (don't auto-run check / lint / build)
+- When to invoke AI skills / capabilities
+- Coding style (Vue / TS baseline)
+- Component reuse (search before implementing)
+- Full code-boundary declaration (with Shared Code Change Protocol)
+- UI style (how to treat design mockups)
+- `CLAUDE.md` / `AGENTS.md` entry files (recognized by both Claude Code and Codex)
+
+One-line install into a target project:
+
+```bash
+~/personal-ai-harness/install-rules.sh /path/to/your-project
+# or from inside the project dir:
+~/personal-ai-harness/install-rules.sh
+```
+
+**Why not under `.claude/rules/`?** Rule files land in `<project>/.ai/rules/`,
+so they are **NOT auto-loaded into every Claude Code session** — they get Read
+on-demand only when relevant. Saves ~2000 tokens per session. `CLAUDE.md` and
+`AGENTS.md` are only created if missing (never overwrite a project's own entry).
+
+After installing, you need to fill in:
+1. The "project-specific" section in `CLAUDE.md` / `AGENTS.md` (stack, commands, layout).
+2. The actual path globs in `.ai/rules/code-boundary.md`.
+3. (Optional) Prettier / ESLint values in `.ai/rules/coding-style.md`.
+
 ## Uninstall
 
 ```bash
@@ -140,6 +177,7 @@ Each machine keeps its own `~/.claude/settings.json` (with its own API tokens, e
 - New skills: drop the directory into `home/.agents/skills/<name>/`, re-run `./install.sh`.
 - New hooks: add script to `home/.claude/scripts/`, register in `home/.claude/settings.hooks.json`, re-run `./install.sh`.
 - New example rule files: add to `examples/` (manual copy into projects — not symlinked).
+- Modify / add shared rule templates: edit under `templates/ai-rules/rules/`. Any project that ran `install-rules.sh` can re-run it to pull the latest (re-runs only overwrite rule files, never `CLAUDE.md` / `AGENTS.md`).
 
 ## Why symlinks instead of copies
 
